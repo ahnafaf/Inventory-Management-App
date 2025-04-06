@@ -25,8 +25,8 @@ CREATE DATABASE stock_app;
 1. Clone the repository (if you haven't already):
 
 ```bash
-git clone <repository-url>
-cd stock_app
+git clone https://github.com/ahnafaf/Inventory-Management-App.git
+cd Inventory-Management-App
 ```
 
 2. Install backend dependencies:

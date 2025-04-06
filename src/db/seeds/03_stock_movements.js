@@ -63,7 +63,7 @@ exports.seed = async function(knex) {
       // Paracetamol Batch 1 movements
       {
         batch_id: paracetamolBatch1,
-        movement_type: 'RECEIVE',
+        movement_type: 'receive',
         quantity: 100,
         reference: 'INITIAL-RECEIVE',
         notes: 'Initial stock receipt',
@@ -72,7 +72,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: paracetamolBatch1,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 10,
         reference: 'ORDER-001',
         notes: 'Issued to customer',
@@ -81,7 +81,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: paracetamolBatch1,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 15,
         reference: 'ORDER-005',
         notes: 'Issued to pharmacy department',
@@ -92,7 +92,7 @@ exports.seed = async function(knex) {
       // Paracetamol Batch 2 movements
       {
         batch_id: paracetamolBatch2,
-        movement_type: 'RECEIVE',
+        movement_type: 'receive',
         quantity: 200,
         reference: 'RESTOCK-001',
         notes: 'Restocking shipment',
@@ -103,7 +103,7 @@ exports.seed = async function(knex) {
       // Amoxicillin movements
       {
         batch_id: amoxicillinBatch,
-        movement_type: 'RECEIVE',
+        movement_type: 'receive',
         quantity: 150,
         reference: 'INITIAL-RECEIVE',
         notes: 'Initial stock receipt',
@@ -112,7 +112,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: amoxicillinBatch,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 30,
         reference: 'ORDER-002',
         notes: 'Issued to customer',
@@ -121,7 +121,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: amoxicillinBatch,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 20,
         reference: 'ORDER-008',
         notes: 'Issued to pharmacy department',
@@ -132,7 +132,7 @@ exports.seed = async function(knex) {
       // Ibuprofen movements
       {
         batch_id: ibuprofenBatch,
-        movement_type: 'RECEIVE',
+        movement_type: 'receive',
         quantity: 300,
         reference: 'INITIAL-RECEIVE',
         notes: 'Initial stock receipt',
@@ -141,7 +141,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: ibuprofenBatch,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 25,
         reference: 'ORDER-003',
         notes: 'Issued to customer',
@@ -150,7 +150,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: ibuprofenBatch,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 15,
         reference: 'ORDER-006',
         notes: 'Issued to pharmacy department',
@@ -159,7 +159,7 @@ exports.seed = async function(knex) {
       },
       {
         batch_id: ibuprofenBatch,
-        movement_type: 'ISSUE',
+        movement_type: 'issue',
         quantity: 10,
         reference: 'ORDER-010',
         notes: 'Issued to customer',
