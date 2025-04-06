@@ -15,8 +15,8 @@ Follow these steps to quickly test the application:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/stock_app.git
-cd stock_app
+git clone https://github.com/ahnafaf/Inventory-Management-App.git
+cd Inventory-Management-App
 ```
 
 ### 2. Setup and Run
