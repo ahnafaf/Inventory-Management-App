@@ -1,0 +1,39 @@
+{
+  "name": "stock_app",
+  "version": "1.0.0",
+  "description": "Stock Management Application with API, Web UI, and CLI",
+  "main": "index.js",
+  "bin": {
+    "stock": "./src/cli/index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:ui\"",
+    "dev:ui": "cd frontend && npm run dev",
+    "migrate": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
+    "migrate:make": "knex migrate:make",
+    "seed": "knex seed:run",
+    "cli": "node ./src/cli/index.js",
+    "link-cli": "npm link",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "commander": "^13.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "knex": "^3.1.0",
+    "pg": "^8.14.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9"
+  }
+}
