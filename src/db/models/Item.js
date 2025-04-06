@@ -20,42 +20,88 @@ class Item {
 
   // Create a new item
   static async create(item) {
-    // Insert the item and return the ID
-    const result = await db(this.tableName)
-      .insert(item)
-      .returning('id');
+    // Set default active status and timestamps if not provided
+    const itemData = {
+      ...item,
+      active: item.active !== undefined ? item.active : true,
+      created_at: item.created_at || db.fn.now(),
+      updated_at: db.fn.now()
+    };
     
-    // Extract the ID properly, handling both array and object formats
-    let id;
-    if (typeof result[0] === 'object') {
-      id = result[0].id;
-    } else {
-      id = result[0];
+    // Begin a transaction to ensure data integrity
+    const trx = await db.transaction();
+    
+    try {
+      // Insert the item and return the ID
+      const result = await trx(this.tableName)
+        .insert(itemData)
+        .returning('*');
+      
+      // Extract the created item, handling different result formats
+      const createdItem = Array.isArray(result) ? result[0] : result;
+      
+      // Commit the transaction
+      await trx.commit();
+      
+      return createdItem;
+    } catch (error) {
+      // Rollback in case of error
+      await trx.rollback();
+      throw error;
     }
-
-    return this.getById(id);
   }
 
   // Update an item
   static async update(id, item) {
-    await db(this.tableName)
-      .where('id', id)
-      .update({
-        ...item,
-        updated_at: db.fn.now()
-      });
+    // Begin a transaction to ensure data integrity
+    const trx = await db.transaction();
+    
+    try {
+      await trx(this.tableName)
+        .where('id', id)
+        .update({
+          ...item,
+          updated_at: db.fn.now()
+        });
 
-    return this.getById(id);
+      // Get the updated item
+      const updatedItem = await trx(this.tableName)
+        .where('id', id)
+        .first();
+      
+      // Commit the transaction
+      await trx.commit();
+      
+      return updatedItem;
+    } catch (error) {
+      // Rollback in case of error
+      await trx.rollback();
+      throw error;
+    }
   }
 
   // Delete an item (soft delete)
   static async delete(id) {
-    return db(this.tableName)
-      .where('id', id)
-      .update({
-        active: false,
-        updated_at: db.fn.now()
-      });
+    // Begin a transaction to ensure data integrity
+    const trx = await db.transaction();
+    
+    try {
+      await trx(this.tableName)
+        .where('id', id)
+        .update({
+          active: false,
+          updated_at: db.fn.now()
+        });
+      
+      // Commit the transaction
+      await trx.commit();
+      
+      return true;
+    } catch (error) {
+      // Rollback in case of error
+      await trx.rollback();
+      throw error;
+    }
   }
 }
 

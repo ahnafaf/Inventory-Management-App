@@ -12,6 +12,51 @@ Follow these steps to quickly test the application:
 - PostgreSQL 13 or higher
 - npm or yarn package manager
 
+### Available Commands
+
+Here are all the available commands for managing the application:
+
+#### First-time Setup & Running
+
+```bash
+# Install all dependencies, set up database, and start both servers (first time use)
+npm run setup:dev   # Installs dependencies, migrates & seeds DB, starts in dev mode
+npm run setup:prod  # Installs dependencies, migrates & seeds DB, starts in production mode
+```
+
+#### Day-to-day Usage
+
+```bash
+# Start both backend and frontend without reseeding the database
+npm run start:both  # Start both backend & frontend servers
+
+# Start servers in development mode (with auto-reloading)
+npm run start:dev   # Start both servers with auto-reloading for development
+
+# Start individual components
+npm start           # Start only the backend server
+npm run start:frontend  # Start only the frontend server
+npm run dev         # Start backend with auto-reloading (nodemon)
+```
+
+#### Database Management
+
+```bash
+# Database setup and maintenance
+npm run migrate     # Run database migrations
+npm run seed        # Run database seeding
+npm run migrate:rollback  # Rollback the last migration
+```
+
+#### Other Utilities
+
+```bash
+# Other useful commands
+npm run build       # Build the frontend for production
+npm run link-cli    # Link the CLI tool globally
+npm run install:all # Install dependencies for both backend and frontend
+```
+
 ### 1. Clone the Repository
 
 ```bash
@@ -21,67 +66,36 @@ cd Inventory-Management-App
 
 ### 2. Setup and Run
 
-#### Database Setup
-
-Create a PostgreSQL database:
-
-```sql
-CREATE DATABASE stock_app;
-```
-
-#### Backend Setup
-
-1. Install dependencies and run migrations:
+For first-time users, run one of these commands:
 
 ```bash
-# Install backend dependencies
-npm install
+# Full setup with development mode (auto-reloading)
+npm run setup:dev
 
-# Run database migrations and seed data
-npm run migrate
-npm run seed
+# OR for production mode
+npm run setup:prod
+```
 
-# Start the server
-npm start
+For subsequent runs (after first-time setup is done):
+
+```bash
+# Just start both servers without reseeding the database
+npm run start:both
 ```
 
 The API server will be available at: http://localhost:3000
-
-#### Frontend Setup
-
-1. In a new terminal, navigate to the frontend directory and start the development server:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
 The web UI will be available at: http://localhost:5173
 
-#### CLI Setup
-
-1. In a new terminal, link the CLI globally:
+### 3. CLI Setup (Optional)
 
 ```bash
 # From the project root
 npm run link-cli
 ```
 
-2. Now you can use the CLI:
-
+Now you can use the CLI with the `stock` command:
 ```bash
-# Get help
 stock --help
-
-# List items
-stock list-items
-
-# Add an item
-stock add-item --name "Test Item" --sku "TEST001" --desc "Test description"
-
-# Receive stock
-stock receive --item-id 1 --batch-number "BATCH001" --quantity 100 --expiry-date "2026-01-01"
 ```
 
 ## Testing the Application
