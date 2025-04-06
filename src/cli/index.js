@@ -46,7 +46,7 @@ program
 program
   .command('add-item')
   .description('Add a new item to the inventory')
-  .requiredOption('--name <name>', 'Item name')
+  .requiredOption('--name <n>', 'Item name')
   .option('--sku <sku>', 'Item SKU')
   .option('--desc <description>', 'Item description')
   .action(async (options) => {
@@ -66,7 +66,11 @@ program
         Description: response.data.description || 'N/A'
       }]);
     } catch (error) {
-      console.error('Error adding item:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error adding item: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error adding item:', error.response?.data?.error || error.message);
+      }
     }
   });
 
@@ -90,7 +94,7 @@ program
       }
       
       const receiveData = {
-        itemId: options.itemId,
+        itemId: parseInt(options.itemId),
         batchNumber: options.batchNumber,
         quantity: options.quantity,
         expiryDate: options.expiryDate,
@@ -120,7 +124,11 @@ program
         'Created At': new Date(response.data.movement.created_at).toLocaleString()
       }]);
     } catch (error) {
-      console.error('Error receiving stock:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error receiving stock: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error receiving stock:', error.response?.data?.error || error.message);
+      }
     }
   });
 
@@ -137,7 +145,7 @@ program
     try {
       const params = {};
       
-      if (options.itemId) params.itemId = options.itemId;
+      if (options.itemId) params.itemId = parseInt(options.itemId);
       if (options.batchNumber) params.batchNumber = options.batchNumber;
       if (options.hasStock) params.hasStock = true;
       if (options.sortBy) params.sortBy = options.sortBy;
@@ -159,7 +167,11 @@ program
         'Current Qty': batch.current_quantity
       })));
     } catch (error) {
-      console.error('Error listing batches:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error listing batches: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error listing batches:', error.response?.data?.error || error.message);
+      }
     }
   });
 
@@ -189,7 +201,11 @@ program
         'Days Left': Math.ceil((new Date(batch.expiry_date) - new Date()) / (1000 * 60 * 60 * 24))
       })));
     } catch (error) {
-      console.error('Error listing expiring batches:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error listing expiring batches: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error listing expiring batches:', error.response?.data?.error || error.message);
+      }
     }
   });
 
@@ -206,8 +222,8 @@ program
     try {
       const params = {};
       
-      if (options.batchId) params.batchId = options.batchId;
-      if (options.itemId) params.itemId = options.itemId;
+      if (options.batchId) params.batchId = parseInt(options.batchId);
+      if (options.itemId) params.itemId = parseInt(options.itemId);
       if (options.type) params.movementType = options.type;
       if (options.startDate) params.startDate = options.startDate;
       if (options.endDate) params.endDate = options.endDate;
@@ -229,7 +245,11 @@ program
         'Created At': new Date(movement.created_at).toLocaleString()
       })));
     } catch (error) {
-      console.error('Error listing movements:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error listing movements: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error listing movements:', error.response?.data?.error || error.message);
+      }
     }
   });
 
@@ -249,7 +269,7 @@ program
       }
       
       const issueData = {
-        batchId: options.batchId,
+        batchId: parseInt(options.batchId),
         quantity: options.quantity,
         reference: options.reference,
         notes: options.notes
@@ -276,7 +296,11 @@ program
         'Created At': new Date(response.data.movement.created_at).toLocaleString()
       }]);
     } catch (error) {
-      console.error('Error issuing stock:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error issuing stock: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error issuing stock:', error.response?.data?.error || error.message);
+      }
     }
   });
 
@@ -296,7 +320,7 @@ program
       }
       
       const adjustData = {
-        batchId: options.batchId,
+        batchId: parseInt(options.batchId),
         adjustmentQuantity: options.quantity,
         reference: options.reference,
         notes: options.notes
@@ -323,7 +347,64 @@ program
         'Created At': new Date(response.data.movement.created_at).toLocaleString()
       }]);
     } catch (error) {
-      console.error('Error adjusting stock:', error.response?.data?.error || error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error adjusting stock: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error adjusting stock:', error.response?.data?.error || error.message);
+      }
+    }
+  });
+
+// Write-off stock
+program
+  .command('write-off')
+  .description('Write off stock from a batch')
+  .requiredOption('--batch-id <id>', 'Batch ID')
+  .requiredOption('--quantity <qty>', 'Quantity to write off', parseInt)
+  .option('--reference <ref>', 'Reference information')
+  .option('--notes <notes>', 'Additional notes')
+  .action(async (options) => {
+    try {
+      if (options.quantity <= 0) {
+        console.error('Quantity must be a positive number');
+        return;
+      }
+      
+      // For write-off, we use the adjust endpoint with a dedicated movement type
+      const writeOffData = {
+        batchId: parseInt(options.batchId),
+        adjustmentQuantity: -Math.abs(options.quantity), // Ensure negative value
+        reference: options.reference,
+        notes: options.notes,
+        movementType: 'write_off'
+      };
+      
+      const response = await apiClient.post('/stock/adjust', writeOffData);
+      console.log('Stock written off successfully:');
+      
+      console.log('Updated Batch:');
+      console.table([{
+        ID: response.data.batch.id,
+        'Item Name': response.data.batch.item_name,
+        'Batch Number': response.data.batch.batch_number,
+        'Current Quantity': response.data.batch.current_quantity
+      }]);
+      
+      console.log('Movement Details:');
+      console.table([{
+        ID: response.data.movement.id,
+        Type: response.data.movement.movement_type,
+        Quantity: response.data.movement.quantity,
+        Reference: response.data.movement.reference || 'N/A',
+        Notes: response.data.movement.notes || 'N/A',
+        'Created At': new Date(response.data.movement.created_at).toLocaleString()
+      }]);
+    } catch (error) {
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Error writing off stock: Could not connect to the API server. Make sure the server is running.');
+      } else {
+        console.error('Error writing off stock:', error.response?.data?.error || error.message);
+      }
     }
   });
 
