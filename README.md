@@ -1,40 +1,125 @@
 # Stock Management Application
 
-A comprehensive inventory control system for tracking items, stock batches, and movement operations with expiry date management. This application provides a complete stock management solution with a backend API, web UI, and CLI.
+A comprehensive inventory control system for tracking items, stock batches, and movement operations with expiry date management.
 
-![Stock App Banner](https://via.placeholder.com/1200x300/0077cc/ffffff?text=Stock+Management+App)
+## Quick Start Guide
 
-## Table of Contents
+Follow these steps to quickly test the application:
 
-- [Stock Management Application](#stock-management-application)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [System Architecture](#system-architecture)
-  - [Database Schema](#database-schema)
-    - [items](#items)
-    - [stock\_batches](#stock_batches)
-    - [stock\_movements](#stock_movements)
-  - [Project Structure](#project-structure)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-    - [Database Setup](#database-setup)
-    - [Backend Setup](#backend-setup)
-    - [Frontend Setup](#frontend-setup)
-    - [CLI Setup](#cli-setup)
-  - [Usage](#usage)
-    - [Web Interface](#web-interface)
-    - [CLI Commands](#cli-commands)
-    - [API Endpoints](#api-endpoints)
-      - [Items](#items-1)
-      - [Stock Batches](#stock-batches)
-      - [Stock Movements](#stock-movements)
-      - [Stock Operations](#stock-operations)
-  - [Development](#development)
-    - [Running in Development Mode](#running-in-development-mode)
-    - [Database Migrations](#database-migrations)
-    - [Seeding Data](#seeding-data)
-  - [Contributing](#contributing)
-  - [License](#license)
+### Prerequisites
+
+- Node.js v18 or higher
+- PostgreSQL 13 or higher
+- npm or yarn package manager
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/stock_app.git
+cd stock_app
+```
+
+### 2. Setup and Run
+
+#### Database Setup
+
+Create a PostgreSQL database:
+
+```sql
+CREATE DATABASE stock_app;
+```
+
+#### Backend Setup
+
+1. Install dependencies and run migrations:
+
+```bash
+# Install backend dependencies
+npm install
+
+# Run database migrations and seed data
+npm run migrate
+npm run seed
+
+# Start the server
+npm start
+```
+
+The API server will be available at: http://localhost:3000
+
+#### Frontend Setup
+
+1. In a new terminal, navigate to the frontend directory and start the development server:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The web UI will be available at: http://localhost:5173
+
+#### CLI Setup
+
+1. In a new terminal, link the CLI globally:
+
+```bash
+# From the project root
+npm run link-cli
+```
+
+2. Now you can use the CLI:
+
+```bash
+# Get help
+stock --help
+
+# List items
+stock list-items
+
+# Add an item
+stock add-item --name "Test Item" --sku "TEST001" --desc "Test description"
+
+# Receive stock
+stock receive --item-id 1 --batch-number "BATCH001" --quantity 100 --expiry-date "2026-01-01"
+```
+
+## Testing the Application
+
+### Web Interface
+
+1. Open http://localhost:5173 in your browser
+2. Use the navigation menu to access different sections:
+   - **Items**: View and manage inventory items
+   - **Batches**: View all stock batches
+   - **Receive Stock**: Add new inventory
+   - **Issue Stock**: Remove stock for use
+   - **Movements**: Track inventory changes
+   - **Expiring Stock**: Monitor soon-to-expire items
+
+### CLI Testing
+
+Try these commands to test the CLI functionality:
+
+```bash
+# Add a new item
+stock add-item --name "Paracetamol" --sku "MED001" --desc "Pain relief medication"
+
+# Receive stock for the item (note the item-id from the previous command)
+stock receive --item-id 1 --batch-number "BATCH001" --quantity 100 --expiry-date "2026-04-06"
+
+# List all batches
+stock list-batches
+
+# Issue some stock
+stock issue --batch-id 1 --quantity 10 --reference "Hospital Order #123"
+
+# Check movements
+stock list-movements
+
+# Check expiring batches (within next 365 days)
+stock expiring --days 365
+```
 
 ## Features
 
